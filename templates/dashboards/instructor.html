@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">Instructor Dashboard</h2>
+            <p class="text-muted">
+                Welcome back, {{ user.username }} 👋
+            </p>
+        </div>
+    </div>
+
+    {% if has_assigned_courses %}
+    <div class="card shadow-sm border-success">
+        <div class="card-body">
+            <h5 class="card-title text-success">✅ Access Granted</h5>
+            <p class="card-text">You have active course assignments. You can manage content for your students below.</p>
+
+            <div class="mt-3">
+                <a href="{% url 'add_content' %}" class="btn btn-primary btn-lg shadow">
+                    ➕ Add New Course Content
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning shadow-sm" role="alert">
+        <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> No Courses Assigned</h4>
+        <p>
+            Hello <strong>{{ user.username }}</strong>, it appears that the System Administrator has not assigned you to
+            any courses yet.
+        </p>
+        <hr>
+        <p class="mb-0">
+            You cannot upload content until you are linked to a course. Please contact the
+            <a href="mailto:admin@kgp-platform.edu" class="alert-link">System Admin</a>
+            to update your teaching assignments in the database.
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

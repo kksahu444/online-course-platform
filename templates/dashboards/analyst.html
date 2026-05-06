@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+
+    <h2 class="mb-4 text-center">Analyst Dashboard</h2>
+
+    <!-- Course Selection -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <form method="get">
+                <label class="fw-bold mb-2">Select Course</label>
+                <select name="course" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Choose a Course --</option>
+                    {% for course in courses %}
+                    {% if stats and stats.course.course_id == course.course_id %}
+                    <option value="{{ course.course_id }}" selected>
+                        {{ course.course_name }}
+                    </option>
+                    {% else %}
+                    <option value="{{ course.course_id }}">
+                        {{ course.course_name }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+
+                </select>
+            </form>
+        </div>
+    </div>
+
+    {% if stats %}
+    <!-- Stats Summary -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h5>Total Enrollments</h5>
+                    <h2 class="text-primary">{{ stats.enrollment_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h5>Average Marks</h5>
+                    <h2 class="text-success">{{ stats.avg_marks }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    Enrollment Statistics
+                </div>
+                <div class="card-body">
+                    <canvas id="enrollmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    Performance Statistics
+                </div>
+                <div class="card-body">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ labels|json_script:"labels-data" }}
+    {{ counts|json_script:"counts-data" }}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const labels = JSON.parse(
+            document.getElementById('labels-data').textContent
+        );
+        const counts = JSON.parse(
+            document.getElementById('counts-data').textContent
+        );
+
+        new Chart(document.getElementById('enrollmentChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Students Enrolled',
+                    data: counts,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('performanceChart'), {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Distribution',
+                    data: counts
+                }]
+            }
+        });
+    </script>
+    {% endif %}
+
+</div>
+{% endblock %}

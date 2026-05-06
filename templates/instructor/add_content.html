@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0">Add Course Material</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Target Course</label>
+                        {{ form.course }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Material Title</label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Content Type (e.g., PDF, MP4)</label>
+                            {{ form.content_type }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Resource URL</label>
+                        {{ form.url }}
+                        <div class="form-text">Provide the full link to the hosted content.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Upload to Course</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

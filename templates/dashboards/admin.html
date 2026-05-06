@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center">
+    <h1 class="display-5 fw-bold">System Administration</h1>
+    <p class="fs-4">Database Management Console</p>
+    <hr class="my-4">
+
+    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+        <a href="/admin/" class="btn btn-dark btn-lg px-4 gap-3">
+            Open Database Panel
+        </a>
+
+        <a href="{% url 'assign_instructor' %}" class="btn btn-danger btn-lg px-4 gap-3">
+            Assign Instructor to Course
+        </a>
+    </div>
+</div>
+{% endblock %}
