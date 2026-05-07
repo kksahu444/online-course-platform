@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Grade Student: {{ student.student_name }}</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Course:</strong> {{ course.course_name }}</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Marks (0-100)</label>
+                        <input type="number" name="marks" class="form-control" min="0" max="100" required
+                               value="{{ existing_grade.marks|default:'' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Feedback (Optional)</label>
+                        <textarea name="feedback" class="form-control" rows="3">{{ existing_grade.feedback|default:'' }}</textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Submit Grade</button>
+                        <a href="{% url 'manage_students' course.course_id %}" class="btn btn-light">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

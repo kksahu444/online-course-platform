@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-cpu"></i> Platform Analytics</h2>
+        <div>
+            <a href="{% url 'analyst_dashboard' %}" class="btn btn-outline-dark me-2">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+            <span class="badge bg-secondary p-2">Live Database Metrics</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2"></i>Enrollment per Course</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="enrollmentChart" style="max-height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Avg Marks Distribution</h5>
+                </div>
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <canvas id="performanceChart"></canvas>
+                    <div class="mt-4 w-100">
+                        <p class="small text-muted text-center">
+                            Reflecting real-time averages from the <strong>Evaluation</strong> table.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ labels|json_script:"labels-data" }}
+{{ counts|json_script:"counts-data" }}
+{{ scores|json_script:"scores-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = JSON.parse(document.getElementById('labels-data').textContent);
+    const counts = JSON.parse(document.getElementById('counts-data').textContent);
+    const scores = JSON.parse(document.getElementById('scores-data').textContent);
+
+    const colors = [
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(255, 159, 64, 0.7)',
+        'rgba(153, 102, 255, 0.7)',
+        'rgba(255, 99, 132, 0.7)'
+    ];
+
+    // Renders the bar chart for student enrollment counts
+    new Chart(document.getElementById('enrollmentChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Enrolled Students',
+                data: counts,
+                backgroundColor: colors[0],
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // Renders the doughnut chart for average course marks
+    new Chart(document.getElementById('performanceChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Avg Marks',
+                data: scores,
+                backgroundColor: colors,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
+{% endblock %}
